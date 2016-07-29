@@ -47,6 +47,7 @@ int main(int argc, char const *argv[])
 
 	int ival = 42;
 	int &rval =  ival;
+
 	int ival1 = 30;	
 	int &rval1  = ival1;
 
@@ -56,6 +57,13 @@ int main(int argc, char const *argv[])
 	int *qq = pp+1;
 
 	cout << &pp <<" , " << &qq <<endl;
+
+	int *p = &ival;
+	int *q = p;
+
+	cout << p << " " << ival << endl;
+	cout << q << " " << rval << endl;
+
 
 	return 0;
 }
