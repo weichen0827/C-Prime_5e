@@ -1,0 +1,221 @@
+
+1.安装git
+==windows
+安装msysgit，下载地址：http://msysgit.github.io/
+安装的时候，基本选择默认设置，但是：
+在Adjusting your PATH environment页，勾选Run Git from the Windows Command Prompt
+
+===ubuntu
+用命令“git --version”查看是否已安装，且版本为1.9.5或更高。若没安装或版本太低：
+$ sudo apt-get install git-core git-gui git-doc gitk  
+
+2.启动git
+
+$ git help  
+
+3.设置git
+
+git config --global user.name "test"                  # 请换成你自己的名字
+git config --global user.email "test@163.com"         # 同上  
+git config --global push.default simple               # 要是你非要用低版本的Git（比如1.7.x），好吧，那就不设simple设current，否则你的Git不支持  
+git config --global core.autocrlf false               # 让Git不要管Windows/Unix换行符转换的事 
+git config --global gui.encoding utf-8                # 避免git gui中的中文乱码  
+git config --global core.quotepath off                # 避免git status显示的中文文件名乱码  
+其中最后两个配置是关于中文乱码的，基本够用了。
+Windows上还需要配置：
+git config --global core.ignorecase false  
+
+4.设置SSH
+$ssh-keygen -t rsa -C "test@163.com"  
+然后一路回车，不要输入任何密码之类，生成ssh key pair。然后就生成一个目录.ssh ，里面有两个文件：id_rsa , id_rsa.pub
+如果在Linux上，需要把其中的私钥告诉本地系统：
+
+$ ssh-add ~/.ssh/id_rsa  
+
+再把其中公钥的内容复制到GitLab上。具体方法是：显示ssh公钥的内容：
+$ cat ~/.ssh/id_rsa.pub  
+
+打开github页面：https://github.com/settings/profile，选择SSH Keys，然后点击Add SSH Key，把刚才ssh公钥id_rsa.pub（windows下的用户目录找到.ssh文件夹进去就可以看到）的内容paste进去。不需要填title，title会自动生成。
+
+注意：需要copy最开头的“ssh-rsa ”这几个字。最后的@地址也不需要。
+
+验证SSH：ssh -T git@github.com
+
+5.开始使用
+
+****
+$ git clone git@github.com:username/test.git  //直接克隆github上的已有仓库。
+****
+
+1）创建新的git仓库
+
+$ mkdir git_repo  
+$ cd git_repo  
+$ git init  
+$ echo "test" > README.mkd  
+$ git add README.mkd  
+$ git commit -m "add README.mkd file"  
+$ git remote add origin git@github.com:username/test.git  
+$ git push -u origin master  
+
+2）使用已存在的git仓库
+$ cd git_repo  
+$ git remote add origin git@github.com:username/test.git  
+$ git push -u origin master  
+
+注意，如果提示fatal: remote origin already exists.，那么说明该本地仓库已经有远端地址了。你可以先使用git remote rm origin删除origin，或者使用git remote add other_name git@github.com:username/test.git来添加（提交时记得使用git push -u other_name master）。
+3）一次提交到多个远端仓库
+
+假设现有仓库地址为： git@github.com:username/test.git
+
+$ git clone git@github.com:username/test.git  
+$ cd test  
+$ vim .git/config  
+[core]  
+    repositoryformatversion = 0  
+    filemode = true  
+    bare = false  
+    logallrefupdates = true  
+[remote "origin"]  
+    url = git@github.com:username/test.git  
+    url = git@gitshell.com:username/test.git  
+    url = git@bitbucket.org:username/test.git  
+    fetch = +refs/heads/*:refs/remotes/origin/*  
+[branch "master"]  
+    remote = origin  
+    merge = refs/heads/master  
+然后第一次提交时需要执行git push -u origin master，再往后就只需要执行git push就能把修改提交到上述三个远端仓库了。
+注意：在 Git 2.0 将会更改默认的push动作为【只 push 当前 branch 到远端仓库】。如果想继续使用git push both命令需要手动设置一下git push的默认动作git config --global push.default matching。
+
+push.default有几个简单动作，这里介绍matching和simple，二者意思分别是 push 本地所有的分支到远端仓库和 push 本地当前分支到上游分支。这个解释貌似还不够精确，可以man git-config来查看详细说明。
+
+4）在现有仓库上创建孤儿分支
+
+孤儿分支意思为该分支中没有任何内容，与之前创建的其他分支没有任何关联。
+
+$ git clone git@github.com:username/test.git  
+$ cd test  
+$ git checkout --orphan new_branch  
+Switched to a new branch 'new_branch'  
+$ git rm -rf . # 删除旧工作目录树中所有文件  
+$ rm .gitignore # 如果有该文件的话就删除  
+$ echo "orphan branch" > README.mkd  
+$ git add .  
+$ git commit -m "add README.mkd file"  
+$ git push origin new_branch  
+5）提交单个分支到远端git仓库
+
+git push命令默认是将所有分支(branch)都提交到git仓库，有时你只想提交某个分支到远端仓库，那么就就需要使用git push origin HEAD。当然也可以使用git config --global push.default tracking命令来改变git push的默认操作，意思是执行git push时默认只提交当前分支到远端git仓库。
+
+git常用指令
+
+以下几个是git常用的指令，可以简单了解一下。
+1）git config
+
+在使用git前最好先配置一下你的个人信息及使用偏好。以下命令的意思就不用解释了吧，执行完以下命令就会在你的家目录（~）下生成一个文件~/.gitconfig。
+
+$ git config --global user.name "username"  
+$ git config --global user.email test@163.com  
+$ git config --global core.editor vim  
+$ git config --global merge.tool vimdiff  
+$ git config --global color.status auto  
+$ git config --global color.branch auto  
+$ git config --global color.interactive auto  
+$ git config --global color.diff auto  
+$ git config --global push.default simple  
+$ git config --global alias.co checkout  
+$ git config --global alias.ci commit  
+$ git config --global alias.st status  
+$ git config --global alias.last 'log -1 HEAD'  
+$ git config --global alias.unstage 'reset HEAD --'  
+2）git add
+
+添加文件内容到索引中去（暂存文件），几个简单示例：
+
+$ git add .  
+$ git add --all  
+$ git add *.txt  
+$ git add directory/*.sh  
+突然你又不想git add了，那么执行以下命令：
+$ git reset .  
+$ git reset *.txt  
+$ git reset directory/*.sh  
+3）git rm
+删除索引和当时工作目录中的文件。
+
+$ git rm filename  
+$ git rm -f *.txt  
+$ git rm -r .  
+4）git commit
+将当前改动记录到仓库中，即提交改动到本地仓库中。
+
+$ git commit -m "add a file and remove a file"  
+突然你又不想git commit了，那么执行以下命令:
+
+$ git reset HEAD^  
+你commit之后发现少添加了一个文件：
+$ git commit -m'msg'  
+$ git add forget_file  
+$ git commit --amend  
+你的 commit 已经 push 到远程分支(master)了，现在你想反悔了：
+$ git clone git@github.com:username/test.git  
+$ cd test  
+$ git reset HEAD^  
+$ git push -f master   
+5）git status
+
+查看当前工作目录的状态，即修改、添加及删除了哪些文件。
+
+$ git status  
+6）git checkout
+检出一个分支和目录到当前工作目录中，可以简单理解为切换分支的命令。
+
+以下命令分别为切换到分支 branch1 和创建一个新的分支 new_branch 。
+
+$ git checkout branch1  
+$ git checkout -b new_branch  
+取消本地改动：
+$ git checkout -- file_name  
+7）git branch
+列出、创建和删除分支。
+
+以下指令分别为列出本地分支、所有分支、远端分支、创建、删除、强制删除分支。
+
+$ git branch --list  
+$ git branch --all  
+$ git branch --remotes  
+$ git branch new_branch  
+$ git branch --delete branch_name  
+$ git branch -D branch_name  
+删除remote tracking branch，就是git branch -r命令列出的分支。
+$ git branch -r  
+$ git branch -d -r origin/develop  
+8）合并分支
+如果出现冲突，那么手动解决冲突就可以了。
+
+$ git checkout branch_name  
+$ git checkout master  
+$ git merge branch_name  
+9）删除远程分支
+合并分支之后如果不再需要以前的分支了，那么可以在本地及远程删除它。
+
+$ git branch -d branch_name  
+$ git branch -D branch_name  
+$ git push origin :branch_name  
+这条命令耐人寻味啊，其中origin是你的远程仓库名字（git remote -v可以查看到）。
+
+10）git diff
+
+查看改动内容。
+
+$ git diff filename  
+$ git diff .  
+$ git diff revision1 revision2  
+$ git diff branch1 branch2  
+DIFF暂存（添加到索引中）的文件：
+$ git add .  
+$ git diff --cached  
+View the redundant Tab or Space in your codes:
+
+$ git diff --check  
+$ git diff --check --cached  
