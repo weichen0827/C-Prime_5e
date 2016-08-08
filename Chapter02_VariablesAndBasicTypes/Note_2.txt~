@@ -22,4 +22,11 @@
     const 对象仅在文件內有效
     如果想在多个文件间共享 const 对象，必须在变量的定义之前添加 extern 关键字
     并且在其他文件使用时，声明也需要添加 extern 关键字
+    
+    用于声明引用的const都是底层const
+    
+4. constexpr
+    const expression    常量表达式
+    指的是  之不会改变并且在编译过程就能得到计算结果的表达式。
+    
 

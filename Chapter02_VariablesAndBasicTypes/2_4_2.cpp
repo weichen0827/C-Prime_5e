@@ -43,5 +43,7 @@ int main(int argc, char const *argv[])
 	const int & aa = ci;
 	//aa = 3;	//assignment of read-only reference ‘aa’
 
+	int null = 0, *p11 = &null;
+
 	return 0;
 }
