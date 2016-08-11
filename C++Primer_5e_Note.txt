@@ -1,3 +1,6 @@
+
+对于C++11的编译需加上	-std=c++11
+
 实例代码网址
     http://www.informit.com/title/0321714113
 
