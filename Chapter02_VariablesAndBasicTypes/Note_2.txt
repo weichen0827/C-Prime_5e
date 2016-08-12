@@ -40,6 +40,16 @@
 
 6. decltype
 	处理顶层const和引用的方式与auto有些许不同。
+
 	如果decltype使用的表达式是一个变量，则decltype返回该变量的类型（包括顶层const和引用在内）。
+	如果decltype使用的表达式不是一个变量，则decltype返回表达式对应的类型。
 
 	引用从来都作为其所指对象的同义词出现，只有用在decltype处是一个例外。
+
+	decltype((variable)) // 注意是双层（或多层）括号
+	其结果永远是引用；
+	decltype(variable)
+	其结果只有当variable本身是一个引用时才是引用。
+
+	赋值是会产生引用的一类典型表达式，引用的类型就是左值的类型。
+	也就是说，如果i时int，则表达式i=x的类型就是int&。
