@@ -25,7 +25,7 @@
     
     用于声明引用的const都是底层const
     
-4. constexpr
+4. constexpr -- 是一种函数
     const expression    常量表达式
     指的是值不会改变并且在编译过程就能得到计算结果的表达式。
     c++11：一般来说，如果你认定变量是一个常量表达式，那就把它声明成 constexpr 类型。
@@ -53,3 +53,10 @@
 
 	赋值是会产生引用的一类典型表达式，引用的类型就是左值的类型。
 	也就是说，如果i时int，则表达式i=x的类型就是int&。
+
+7. 头文件保护符
+	#ifndef	SYMBOL
+	#define SYMBOL
+	//.....
+
+	#endif
