@@ -77,6 +77,8 @@ int main(int argc, char const *argv[])
 			break;
 	}
 
+	cout << "vec size is " << vec.size() << endl;
+
 	for (int i = 0; i < vec.size(); ++i)
 	{
 		// cout << vec[i] << "+"
@@ -88,9 +90,12 @@ int main(int argc, char const *argv[])
 			 << vec[vec.size()-1-i] << "="
 			 << vec[i]+vec[vec.size()-1-i] << endl;
 
-			 if (i >= vec.size()/2 - 1)
-			 	break;
+		if (i >= vec.size()/2 - 1)
+		 	break;
 	}
+
+	if (0 != vec.size()%2)
+		cout << "the left number is " << vec[vec.size()/2] << endl;
 
 	return 0;
 }
