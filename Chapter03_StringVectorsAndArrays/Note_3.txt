@@ -96,6 +96,16 @@
 	确保下标合法的一种有效手段就是尽可能使用范围for语句
 
 8. iterator -- 迭代器
-	所有标准库容器都可以使用迭代器
+	所有标准库容器都可以使用迭代器。
+
+	begin() 和 end() 运算符。
+
+	vector<int> v;
+	const vector<int> cv;
+	auto it1 = v.begin();	// it1 的类型是 vector<int>::iterator
+	auto it2 = cv.begin();	// it2 的类型是 vector<int>::const_iterator
+
+	cbegin() 和 cend() 的返回的类型都是 const_iterator
+
 
 

@@ -97,5 +97,9 @@ int main(int argc, char const *argv[])
 	if (0 != vec.size()%2)
 		cout << "the left number is " << vec[vec.size()/2] << endl;
 
+	cout << "iterator" << endl;
+
+
+
 	return 0;
 }
